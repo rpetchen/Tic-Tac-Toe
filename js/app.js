@@ -5,7 +5,8 @@ const box = boxes.children
 const win = document.getElementById('finish')
 const player1 = document.getElementById('player1')
 const player2 = document.getElementById('player2')
-
+// const winText = win.querySelector('p').textContent = 'Winner'
+// const tieText = win.querySelector('p').textContent = 'Tie'
 start.addEventListener('click', function() {
 start.style.display = 'none'
 player2.classList.add('active')
@@ -13,15 +14,16 @@ player2.classList.add('active')
 
 
 
-var player = function (name, src, background, pClass) {
+var player = function (name, src, background, pClass, winClass) {
 	this.name = name
 	this.src = src
 	this.background = background
 	this.class = pClass
+	this.winClass = winClass
 }
 
-Xplayer = new player('X', "img/x.svg", "url('img/x.svg')", "box-filled-2")
-Oplayer = new player('O', "img/o.svg", "url('img/o.svg')", "box-filled-1")
+Xplayer = new player('X', "img/x.svg", "url('img/x.svg')", "box-filled-2", "screen-win-two")
+Oplayer = new player('O', "img/o.svg", "url('img/o.svg')", "box-filled-1", "screen-win-one")
 
 var game = {
 board: ['', '', '', '', '', '', '', '', ''],
@@ -60,30 +62,23 @@ game.iteratePlayer()
 }
 },
 winner: function() {
-	if (this.board[0] === this.player.name && this.board[1] === this.player.name && this.board[2] === this.player.name) {
+	if ((this.board[0] === this.player.name && this.board[1] === this.player.name && this.board[2] === this.player.name) ||
+	    (this.board[3] === this.player.name && this.board[4] === this.player.name && this.board[5] === this.player.name) ||
+	    (this.board[6] === this.player.name && this.board[7] === this.player.name && this.board[8] === this.player.name) ||
+	    (this.board[0] === this.player.name && this.board[3] === this.player.name && this.board[6] === this.player.name) ||
+	    (this.board[1] === this.player.name && this.board[4] === this.player.name && this.board[7] === this.player.name) ||
+	    (this.board[2] === this.player.name && this.board[5] === this.player.name && this.board[8] === this.player.name) ||
+	    (this.board[6] === this.player.name && this.board[4] === this.player.name && this.board[2] === this.player.name) ||
+	    (this.board[0] === this.player.name && this.board[4] === this.player.name && this.board[8] === this.player.name)) {
 		console.log(this.player.name + ' ' + 'wins')
 		win.style.display = ''
-	}
-	if (this.board[3] === this.player.name && this.board[4] === this.player.name && this.board[5] === this.player.name) {
-	console.log(this.player.name + ' ' + 'wins')
-     }
-	if (this.board[6] === this.player.name && this.board[7] === this.player.name && this.board[8] === this.player.name) {	
-	console.log(this.player.name + ' ' + 'wins')
-	}
-	if (this.board[0] === this.player.name && this.board[3] === this.player.name && this.board[6] === this.player.name) {
-	console.log(this.player.name + ' ' + 'wins')
-	}
-	if (this.board[1] === this.player.name && this.board[4] === this.player.name && this.board[7] === this.player.name) {
-	console.log(this.player.name + ' ' + 'wins')
-	}
-	if (this.board[2] === this.player.name && this.board[5] === this.player.name && this.board[8] === this.player.name) {
-	console.log(this.player.name + ' ' + 'wins')
-	}
-	if (this.board[6] === this.player.name && this.board[4] === this.player.name && this.board[2] === this.player.name) {
-	console.log(this.player.name + ' ' + 'wins')
-	}
-	if (this.board[0] === this.player.name && this.board[4] === this.player.name && this.board[8] === this.player.name) {
-	console.log(this.player.name + ' ' + 'wins')
+		win.classList.add(this.player.winClass)
+		const winText = win.querySelector('p').textContent = 'Winner'
+}
+	else if (!game.board.includes('')) {
+		win.style.display = ''
+		win.classList.add('screen-win-tie')
+		const tieText = win.querySelector('p').textContent = 'Tie'
 	}
 },
 hover: function(){
@@ -115,12 +110,14 @@ game.listener()
 
 
 
-function reset () {
+const newGame = document.querySelector('#finish')
+newGame.addEventListener('click', function(){
 game.board.fill('') 
+win.classList.remove(Xplayer.winClass)
+win.classList.remove(Oplayer.winClass)
+win.style.display = 'none'
 for (i = 0; i < box.length; i++) {
-	// if (box[i].classList.contains (Xplayer.class) || box[i].classList.contains (Oplayer.class)) {
 	box[i].classList.remove(Xplayer.class) 
 	box[i].classList.remove(Oplayer.class) 
-// }
 }
-}
+})
